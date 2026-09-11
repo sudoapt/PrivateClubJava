@@ -1,10 +1,22 @@
 package com.example.privateclub.repository;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
     private UUID userUUID;
+    @Column(name="userfirstname", nullable = false)
     private String userFirstName;
+    @Column(name = "userlastname", nullable = false)
     private String userLastName;
 
     public User(String userFirstName, String userLastName) {
