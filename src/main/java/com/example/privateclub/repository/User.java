@@ -32,6 +32,16 @@ public class User {
         return this.userUUID;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userUUID=" + userUUID +
+                ", userFirstName='" + userFirstName + '\'' +
+                ", userLastName='" + userLastName + '\'' +
+                '}';
+    }
+
+
     public String getUserFirstName() {
         return userFirstName;
     }
