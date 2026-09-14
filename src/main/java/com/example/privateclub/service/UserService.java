@@ -1,11 +1,10 @@
 package com.example.privateclub.service;
 
-import com.example.privateclub.UserDTO;
+import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.repository.User;
 import com.example.privateclub.repository.UserRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,15 +20,15 @@ public class UserService {
     }
 
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getUsers() {
+        return userRepository.findAllBy();
     }
 
-    public UserDTO getUserByUUID(UUID uuid) {
-        User user =  userRepository.findByUserUUID(uuid);
+    public UserDTO getUserByUUID(UUID qrcode) {
+        User user =  userRepository.findByUserQRCode(qrcode);
 
         if (user == null) {
-            throw new NotFoundException("No user found by the uuid + " + uuid);
+            throw new NotFoundException("No user found by this qrcode + " + qrcode);
         }
 
         System.out.println(UserMapper.toDTO(user));

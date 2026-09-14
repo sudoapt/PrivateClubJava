@@ -1,6 +1,11 @@
-package com.example.privateclub;
+package com.example.privateclub.dto;
 
 import java.util.UUID;
 
-public record UserDTO(UUID uuid, String userFirstName, String userLastName) {
+public record UserDTO(
+                      String userFirstName,
+                      String userLastName,
+                      String userEmail,
+                      UUID userQRCode
+                      ) {
 }

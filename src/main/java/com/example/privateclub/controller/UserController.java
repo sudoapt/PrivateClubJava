@@ -1,11 +1,8 @@
 package com.example.privateclub.controller;
 
 
-import com.example.privateclub.UserDTO;
-import com.example.privateclub.exceptions.NotFoundException;
-import com.example.privateclub.repository.User;
+import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.service.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers(){
+    public List<UserDTO> getUsers(){
         return this.userService.getUsers();
     }
 

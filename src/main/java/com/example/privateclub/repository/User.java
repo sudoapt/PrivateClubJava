@@ -1,9 +1,6 @@
 package com.example.privateclub.repository;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -18,11 +15,15 @@ public class User {
     private String userFirstName;
     @Column(name = "userlastname", nullable = false)
     private String userLastName;
+    @Column(name = "useremail", nullable = false)
+    private String userEmail;
+    @Column(name = "userqrcode", nullable = false)
+    private UUID userQRCode;
 
-    public User(String userFirstName, String userLastName) {
-        this.userUUID = UUID.randomUUID();
+    public User(String userFirstName, String userLastName, String userEmail) {
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
+        this.userEmail = userEmail;
     }
 
     public User() {
@@ -31,16 +32,6 @@ public class User {
     public UUID getUserUUID() {
         return this.userUUID;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userUUID=" + userUUID +
-                ", userFirstName='" + userFirstName + '\'' +
-                ", userLastName='" + userLastName + '\'' +
-                '}';
-    }
-
 
     public String getUserFirstName() {
         return userFirstName;
@@ -56,5 +47,32 @@ public class User {
 
     public void setUserLastName(String userLastName) {
         this.userLastName = userLastName;
+    }
+
+    public UUID getUserQRCode() {
+        return userQRCode;
+    }
+
+    public void setUserQRCode(UUID userQRCode) {
+        this.userQRCode = userQRCode;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userUUID=" + userUUID +
+                ", userFirstName='" + userFirstName + '\'' +
+                ", userLastName='" + userLastName + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userQRCode=" + userQRCode +
+                '}';
     }
 }
