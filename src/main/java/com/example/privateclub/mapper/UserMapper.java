@@ -2,15 +2,23 @@ package com.example.privateclub.mapper;
 
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.repository.User;
+import com.example.privateclub.repository.UserQRCode;
+
+import java.util.List;
+import java.util.UUID;
 
 public class UserMapper {
     public static UserDTO toDTO(User user) {
+        List<UUID> userQRCodes = user.getUserQRCodes().stream()
+                .map(UserQRCode::getUserQRCode)
+                .toList();
+
         return new UserDTO(
-//                user.getUserUUID(),
+                user.getUserUUID(),
                 user.getUserFirstName(),
                 user.getUserLastName(),
                 user.getUserEmail(),
-                user.getUserQRCode());
+                userQRCodes);
     }
 
     public static User toEntity(UserDTO userDTO) {

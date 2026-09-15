@@ -1,20 +1,18 @@
 package com.example.privateclub.controller;
 
-
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping(path = "api/v1/users")
 public class UserController {
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -22,16 +20,20 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> getUsers(){
-        return this.userService.getUsers();
+    public ResponseEntity<List<UserDTO>> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
     }
 
-    @GetMapping("/{uuid}")
-    public UserDTO getUserByUUID(@PathVariable UUID uuid) {
-        return this.userService.getUserByUUID(uuid);
+    // Fixed: Wrapped response in ResponseEntity and routed to the correct QR code lookup service method
+    @GetMapping("/qrcode/{uuid}")
+    public ResponseEntity<UserDTO> getUserByQRCode(@PathVariable UUID uuid) {
+        UserDTO userDTO = this.userService.getUserByUUID(uuid);
+        return ResponseEntity.ok(userDTO);
     }
 
-
-
-
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        UserDTO createUserResponseDTO = userService.createNewUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponseDTO);
+    }
 }

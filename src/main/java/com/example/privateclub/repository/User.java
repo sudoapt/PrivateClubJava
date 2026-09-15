@@ -2,6 +2,8 @@ package com.example.privateclub.repository;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -10,6 +12,8 @@ import java.util.UUID;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "useruuid", updatable = false, nullable = false)
     private UUID userUUID;
     @Column(name="userfirstname", nullable = false)
     private String userFirstName;
@@ -17,14 +21,24 @@ public class User {
     private String userLastName;
     @Column(name = "useremail", nullable = false)
     private String userEmail;
-    @Column(name = "userqrcode", nullable = false)
-    private UUID userQRCode;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<UserQRCode> userQRCodes = new ArrayList<>();
 
     public User(String userFirstName, String userLastName, String userEmail) {
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
         this.userEmail = userEmail;
     }
+
+    public void addQRCode(UserQRCode userQRCode){
+        if (this.userQRCodes.size() >= 5) {
+            throw new IllegalStateException("User can not have more than 5 qrcodes.");
+        }
+        // ?
+        this.userQRCodes.add(userQRCode);
+        userQRCode.setUser(this);
+    }
+
 
     public User() {
     }
@@ -49,12 +63,11 @@ public class User {
         this.userLastName = userLastName;
     }
 
-    public UUID getUserQRCode() {
-        return userQRCode;
+    public List<UserQRCode> getUserQRCodes() {
+        return userQRCodes;
     }
-
-    public void setUserQRCode(UUID userQRCode) {
-        this.userQRCode = userQRCode;
+    public void setUserQRCodes(List<UserQRCode> qrCodes) {
+        this.userQRCodes = qrCodes;
     }
 
     public String getUserEmail() {
@@ -72,7 +85,6 @@ public class User {
                 ", userFirstName='" + userFirstName + '\'' +
                 ", userLastName='" + userLastName + '\'' +
                 ", userEmail='" + userEmail + '\'' +
-                ", userQRCode=" + userQRCode +
                 '}';
     }
 }
