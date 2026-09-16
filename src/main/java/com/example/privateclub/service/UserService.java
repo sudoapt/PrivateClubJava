@@ -1,10 +1,12 @@
 package com.example.privateclub.service;
 
 import com.example.privateclub.dto.UserDTO;
+import com.example.privateclub.exceptions.EntityNotFoundException;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.repository.User;
 import com.example.privateclub.repository.UserQRCode;
+import com.example.privateclub.repository.UserQRCodeRepository;
 import com.example.privateclub.repository.UserRepository;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
@@ -19,12 +21,14 @@ import java.util.UUID;
 public class UserService {
     // bean injection
     private final UserRepository userRepository;
+    private final UserQRCodeRepository userQRCodeRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserQRCodeRepository userQRCodeRepository) {
         this.userRepository = userRepository;
+        this.userQRCodeRepository = userQRCodeRepository;
     }
 
     @Transactional(readOnly = true)
@@ -34,6 +38,28 @@ public class UserService {
         return users.stream()
                 .map(UserMapper::toDTO)
                 .toList();
+    }
+
+    @Transactional
+    public UserDTO readAndRotateQRCode(UUID userQRCodeUUID) {
+        User user = userRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
+                .orElseThrow(() -> new EntityNotFoundException("Invalid or expired QR code: " + userQRCodeUUID));
+
+        // remove the qrcode from the List<UserQRCode> userQRCodes
+        user.getUserQRCodes().removeIf(qrcode -> qrcode.getUserQRCode().equals(userQRCodeUUID));
+
+        // delete the qrcode from the db
+        userQRCodeRepository.deleteByUserQRCode(userQRCodeUUID);
+
+        userRepository.save(user);
+        userRepository.flush();
+        entityManager.refresh(user);
+
+        UserQRCode newQRCode = new UserQRCode();
+        newQRCode.setUser(user);
+        userQRCodeRepository.save(newQRCode);
+
+        return UserMapper.toDTO(user);
     }
 
 

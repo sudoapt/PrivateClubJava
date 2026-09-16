@@ -24,12 +24,20 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers());
     }
 
-    // Fixed: Wrapped response in ResponseEntity and routed to the correct QR code lookup service method
-    @GetMapping("/qrcode/{uuid}")
-    public ResponseEntity<UserDTO> getUserByQRCode(@PathVariable UUID uuid) {
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<UserDTO> getUserByUUID(@PathVariable UUID uuid) {
         UserDTO userDTO = this.userService.getUserByUUID(uuid);
         return ResponseEntity.ok(userDTO);
     }
+
+    @GetMapping("/qrcode/{qrcode}")
+    public ResponseEntity<UserDTO> getUserByQRCode(@PathVariable UUID qrcode) {
+        UserDTO userDTO = this.userService.readAndRotateQRCode(qrcode);
+        return ResponseEntity.ok(userDTO);
+
+    }
+
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
