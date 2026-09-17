@@ -1,5 +1,6 @@
 package com.example.privateclub.controller;
 
+import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,9 @@ public class UserController {
     }
 
     @GetMapping("/qrcode/{qrcode}")
-    public ResponseEntity<UserDTO> getUserByQRCode(@PathVariable UUID qrcode) {
-        UserDTO userDTO = this.userService.readAndRotateQRCode(qrcode);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<UserByQRCodeDTO> getUserByQRCode(@PathVariable UUID qrcode) {
+        UserByQRCodeDTO userByQRCodeDTO = this.userService.readAndRotateQRCode(qrcode);
+        return ResponseEntity.ok(userByQRCodeDTO);
 
     }
 

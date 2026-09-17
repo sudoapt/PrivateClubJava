@@ -1,5 +1,6 @@
 package com.example.privateclub.service;
 
+import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.EntityNotFoundException;
 import com.example.privateclub.exceptions.MaxLimitExceededException;
@@ -41,7 +42,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO readAndRotateQRCode(UUID userQRCodeUUID) {
+    public UserByQRCodeDTO readAndRotateQRCode(UUID userQRCodeUUID) {
         User user = userRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
                 .orElseThrow(() -> new EntityNotFoundException("Invalid or expired QR code: " + userQRCodeUUID));
 
@@ -61,7 +62,7 @@ public class UserService {
         // inserts a new qrcode to the table
         userQRCodeRepository.save(newQRCode);
 
-        return UserMapper.toDTO(user);
+        return UserMapper.toByQRCodeDTO(user);
     }
 
     @Transactional
