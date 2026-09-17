@@ -1,6 +1,7 @@
 package com.example.privateclub.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +25,11 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(MaxLimitExceededException.class)
+    public ResponseEntity<String> handleMaxQRCodesAmount(MaxLimitExceededException ex) {
+        return ResponseEntity.status(HttpStatusCode.valueOf(422)).body(ex.getMessage());
     }
 
 

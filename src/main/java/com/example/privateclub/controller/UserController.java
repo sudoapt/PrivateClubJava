@@ -44,4 +44,11 @@ public class UserController {
         UserDTO createUserResponseDTO = userService.createNewUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponseDTO);
     }
+
+    @PostMapping("/{uuid}/qrcodes")
+    public ResponseEntity<UserDTO> makeNewQRCode(@PathVariable UUID uuid) {
+        UserDTO updatedUser = userService.makeNewUserQRCode(uuid);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedUser);
+    }
+
 }

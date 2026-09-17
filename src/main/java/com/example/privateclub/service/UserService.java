@@ -2,13 +2,13 @@ package com.example.privateclub.service;
 
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.EntityNotFoundException;
+import com.example.privateclub.exceptions.MaxLimitExceededException;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.repository.User;
 import com.example.privateclub.repository.UserQRCode;
 import com.example.privateclub.repository.UserQRCodeRepository;
 import com.example.privateclub.repository.UserRepository;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
@@ -56,26 +56,44 @@ public class UserService {
         entityManager.refresh(user);
 
         UserQRCode newQRCode = new UserQRCode();
+        // writes the new qr to the user we're working on
         newQRCode.setUser(user);
+        // inserts a new qrcode to the table
         userQRCodeRepository.save(newQRCode);
 
         return UserMapper.toDTO(user);
     }
 
+    @Transactional
+    public UserDTO makeNewUserQRCode(UUID uuid) {
+        User user =  userRepository.findByUserUUID(uuid);
+        if (user == null) {
+            throw new NotFoundException("No user found by this uuid + " + uuid);
+        }
+
+        if (user.getUserQRCodes().size() >= 5) {
+            throw new MaxLimitExceededException("FORBIDDEN: 5 QR codes per user is the limit.");
+        }
+
+        UserQRCode newUserQRCode = new UserQRCode();
+        newUserQRCode.setUser(user);
+        userQRCodeRepository.save(newUserQRCode);
+
+        userRepository.flush();
+        entityManager.refresh(user);
+
+        return UserMapper.toDTO(user);
+    }
 
 
     public UserDTO getUserByUUID(UUID uuid) {
         User user =  userRepository.findByUserUUID(uuid);
 
         if (user == null) {
-            throw new NotFoundException("No user found by this uuid + " + uuid);
+            throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
         }
-
-        System.out.println(UserMapper.toDTO(user));
         return UserMapper.toDTO(user);
     }
-
-
 
 
     @Transactional
