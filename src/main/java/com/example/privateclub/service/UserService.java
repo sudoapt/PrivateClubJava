@@ -68,7 +68,7 @@ public class UserService {
 
     @Transactional
     public UserDTO makeNewUserQRCode(UUID uuid) {
-        User user =  userRepository.findByUserUUID(uuid);
+        User user = userRepository.findByUserUUID(uuid);
         if (user == null) {
             throw new NotFoundException("No user found by this uuid + " + uuid);
         }
@@ -88,8 +88,34 @@ public class UserService {
     }
 
 
+    @Transactional
+    public void deleteUserQRCode(UUID userUUID, UUID userQRCodeUUID) {
+        User user = userRepository.findByUserUUID(userUUID);
+
+        if (user == null) {
+            throw new NotFoundException("ERROR: No user found by this uuid + " + userUUID);
+        }
+        // find the qrcode and check if it belongs to this user
+        UserQRCode userQRCode = userQRCodeRepository.findById(userQRCodeUUID)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + userUUID));
+
+        if (!user.getUserQRCodes().contains(userQRCode)) {
+            throw new IllegalArgumentException("ERROR: This QR code does not belong to the specified user.");
+        }
+
+        // delete from java memory
+        user.getUserQRCodes().remove(userQRCode);
+        // delete from the db
+        userQRCodeRepository.deleteByUserQRCode(userQRCodeUUID);
+
+        userRepository.save(user);
+        userRepository.flush();
+
+    }
+
+
     public UserDTO getUserByUUID(UUID uuid) {
-        User user =  userRepository.findByUserUUID(uuid);
+        User user = userRepository.findByUserUUID(uuid);
 
         if (user == null) {
             throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
@@ -117,7 +143,7 @@ public class UserService {
 
     @Transactional
     public UserDTO updateExistingUser(UUID uuid, UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
-        User user =  userRepository.findByUserUUID(uuid);
+        User user = userRepository.findByUserUUID(uuid);
 
         if (user == null) {
             throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
@@ -133,7 +159,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserByUUID(UUID uuid){
+    public void deleteUserByUUID(UUID uuid) {
 
         if (!userRepository.existsById(uuid)) {
             throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);

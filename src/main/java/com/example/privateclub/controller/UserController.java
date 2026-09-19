@@ -65,4 +65,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("/{uuid}/qrcodes/{qrcode}")
+    public ResponseEntity<Void> deleteUserQRCode(@PathVariable UUID uuid, @PathVariable("qrcode") UUID userQRCodeUUID) {
+        userService.deleteUserQRCode(uuid, userQRCodeUUID);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+    }
+
 }
