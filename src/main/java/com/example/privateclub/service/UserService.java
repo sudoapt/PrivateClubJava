@@ -1,6 +1,7 @@
 package com.example.privateclub.service;
 
 import com.example.privateclub.dto.UserByQRCodeDTO;
+import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.EntityNotFoundException;
 import com.example.privateclub.exceptions.MaxLimitExceededException;
@@ -98,8 +99,8 @@ public class UserService {
 
 
     @Transactional
-    public UserDTO createNewUser(UserDTO userDTO) {
-        User user = UserMapper.toEntity(userDTO);
+    public UserDTO createNewUser(UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
+        User user = UserMapper.toEntityFromCreate(userCreateAndUpdateDTO);
 
         for (int i = 0; i < 5; i++) {
             UserQRCode userQRCode = new UserQRCode();
@@ -112,6 +113,33 @@ public class UserService {
 //        entityManager.refresh(savedUser);
 
         return UserMapper.toDTO(savedUser);
+    }
+
+    @Transactional
+    public UserDTO updateExistingUser(UUID uuid, UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
+        User user =  userRepository.findByUserUUID(uuid);
+
+        if (user == null) {
+            throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
+        }
+
+        user.setUserFirstName(userCreateAndUpdateDTO.userFirstName());
+        user.setUserLastName(userCreateAndUpdateDTO.userLastName());
+        user.setUserEmail(userCreateAndUpdateDTO.userEmail());
+
+        User updatedUser = userRepository.save(user);
+
+        return UserMapper.toDTO(updatedUser);
+    }
+
+    @Transactional
+    public void deleteUserByUUID(UUID uuid){
+
+        if (!userRepository.existsById(uuid)) {
+            throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
+        }
+
+        userRepository.deleteById(uuid);
     }
 
 }

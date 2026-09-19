@@ -1,6 +1,7 @@
 package com.example.privateclub.mapper;
 
 import com.example.privateclub.dto.UserByQRCodeDTO;
+import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.repository.User;
 import com.example.privateclub.repository.UserQRCode;
@@ -28,11 +29,12 @@ public class UserMapper {
                 user.getUserLastName());
     }
 
-    public static User toEntity(UserDTO userDTO) {
+
+    public static User toEntityFromCreate (UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
         User user = new User();
-        user.setUserFirstName(userDTO.userFirstName());
-        user.setUserLastName(userDTO.userLastName());
-        user.setUserEmail(userDTO.userEmail());
+        user.setUserFirstName(userCreateAndUpdateDTO.userFirstName());
+        user.setUserLastName(userCreateAndUpdateDTO.userLastName());
+        user.setUserEmail(userCreateAndUpdateDTO.userEmail());
         return user;
     }
 

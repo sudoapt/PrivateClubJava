@@ -1,6 +1,7 @@
 package com.example.privateclub.controller;
 
 import com.example.privateclub.dto.UserByQRCodeDTO;
+import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -39,10 +40,9 @@ public class UserController {
 
     }
 
-
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        UserDTO createUserResponseDTO = userService.createNewUser(userDTO);
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
+        UserDTO createUserResponseDTO = userService.createNewUser(userCreateAndUpdateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponseDTO);
     }
 
@@ -50,6 +50,19 @@ public class UserController {
     public ResponseEntity<UserDTO> makeNewQRCode(@PathVariable UUID uuid) {
         UserDTO updatedUser = userService.makeNewUserQRCode(uuid);
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedUser);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<UserDTO> editUser(@PathVariable UUID uuid, @RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
+        UserDTO updatedUser = userService.updateExistingUser(uuid, userCreateAndUpdateDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) {
+        userService.deleteUserByUUID(uuid);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
