@@ -1,0 +1,43 @@
+### GET ALL USERS
+GET http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+### GET USER BY UUID
+GET http://localhost:8080/api/v1/users/{{uuid}}
+Content-Type: application/json
+
+### GET USER BY QRCODE
+GET http://localhost:8080/api/v1/users/qrcode/{{qrcode}}
+
+### MAKE NEW USER
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "userFirstName": "Franco",
+  "userLastName": "Columbo",
+  "userEmail": "fcolumbo@bb.com"
+}
+
+### EDIT EXISTING USER
+PUT http://localhost:8080/api/v1/users/{{uuid}}
+Content-Type: application/json
+
+{
+  "userFirstName": "Scott",
+  "userLastName": "Riddler",
+  "userEmail": "sriddler@rdl.com"
+}
+
+### DELETE USER BY UUID
+DELETE http://localhost:8080/api/v1/users/{{uuid}}
+Content-Type: application/json
+
+### DELETE USER'S QRCODE
+DELETE http://localhost:8080/api/v1/users/{{uuid}}/qrcodes/{{qrcode}}
+
+### ADD USER'S QRCODE
+POST http://localhost:8080/api/v1/users/{{uuid}}/qrcodes
+
+### EDIT USER'S QRCODE
+PUT http://localhost:8080/api/v1/users/{{uuid}}/qrcodes/{{qrcode}}
