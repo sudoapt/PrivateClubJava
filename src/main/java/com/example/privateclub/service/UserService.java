@@ -113,6 +113,20 @@ public class UserService {
 
     }
 
+    @Transactional
+    public UserDTO editUserQRCode(UUID userUUID, UUID userQRCodeUUID) {
+        deleteUserQRCode(userUUID, userQRCodeUUID);
+
+        User user = userRepository.findByUserUUID(userUUID);
+        UserQRCode newQRCode = new UserQRCode();
+        newQRCode.setUser(user);
+        userQRCodeRepository.save(newQRCode);
+
+        userRepository.save(user);
+        userRepository.flush();
+
+        return UserMapper.toDTO(user);
+    }
 
     public UserDTO getUserByUUID(UUID uuid) {
         User user = userRepository.findByUserUUID(uuid);

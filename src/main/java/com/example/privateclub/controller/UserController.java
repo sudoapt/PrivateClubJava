@@ -58,6 +58,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
+    @PutMapping("/{uuid}/qrcodes/{qrcode}")
+    public ResponseEntity<UserDTO> editQRCode(@PathVariable UUID uuid, @PathVariable("qrcode") UUID userQRCodeUUID) {
+        UserDTO updatedUser =  userService.editUserQRCode(uuid, userQRCodeUUID);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    }
+
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) {
         userService.deleteUserByUUID(uuid);
