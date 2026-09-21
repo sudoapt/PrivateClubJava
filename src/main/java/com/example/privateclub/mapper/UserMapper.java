@@ -3,7 +3,7 @@ package com.example.privateclub.mapper;
 import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
-import com.example.privateclub.repository.User;
+import com.example.privateclub.model.User;
 import com.example.privateclub.repository.UserQRCode;
 
 import java.util.List;

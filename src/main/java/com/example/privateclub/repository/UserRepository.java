@@ -1,6 +1,6 @@
 package com.example.privateclub.repository;
 
-import com.example.privateclub.dto.UserDTO;
+import com.example.privateclub.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

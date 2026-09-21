@@ -21,9 +21,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+    @GetMapping(produces = "text/html")
+    public String returnDummyPage() {
+        return """
+               <html>
+               <body style="font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 80vh; margin: 0; background-color: #f9f9f9;">
+                   <blockquote style="font-size: 1.8rem; font-style: italic; max-width: 600px; text-align: center; color: #333; line-height: 1.5;">
+                       "One can not simply return all the records with no pagination..."
+                       <cite style="display: block; font-size: 1rem; font-style: normal; color: #777; margin-top: 15px; font-weight: bold;">
+                           &copy; houston517
+                       </cite>
+                   </blockquote>
+               </body>
+               </html>
+               """;
     }
 
 
@@ -33,12 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/qrcode/{qrcode}")
-    public ResponseEntity<UserByQRCodeDTO> getUserByQRCode(@PathVariable UUID qrcode) {
-        UserByQRCodeDTO userByQRCodeDTO = this.userService.readAndRotateQRCode(qrcode);
-        return ResponseEntity.ok(userByQRCodeDTO);
 
-    }
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
@@ -46,11 +52,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponseDTO);
     }
 
-    @PostMapping("/{uuid}/qrcodes")
-    public ResponseEntity<UserDTO> makeNewQRCode(@PathVariable UUID uuid) {
-        UserDTO updatedUser = userService.makeNewUserQRCode(uuid);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedUser);
-    }
 
     @PutMapping("/{uuid}")
     public ResponseEntity<UserDTO> editUser(@PathVariable UUID uuid, @RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
@@ -58,12 +59,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
-    @PutMapping("/{uuid}/qrcodes/{qrcode}")
-    public ResponseEntity<UserDTO> editQRCode(@PathVariable UUID uuid, @PathVariable("qrcode") UUID userQRCodeUUID) {
-        UserDTO updatedUser =  userService.editUserQRCode(uuid, userQRCodeUUID);
-
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
-    }
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) {
@@ -72,11 +67,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/{uuid}/qrcodes/{qrcode}")
-    public ResponseEntity<Void> deleteUserQRCode(@PathVariable UUID uuid, @PathVariable("qrcode") UUID userQRCodeUUID) {
-        userService.deleteUserQRCode(uuid, userQRCodeUUID);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
-    }
 
 }

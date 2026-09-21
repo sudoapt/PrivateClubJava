@@ -1,12 +1,17 @@
-package com.example.privateclub.repository;
+package com.example.privateclub.model;
 
+import com.example.privateclub.repository.UserQRCode;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 
+@Data
+@NoArgsConstructor
+@Getter
 @Entity
 @Table(name = "users")
 public class User {
@@ -15,10 +20,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "useruuid", updatable = false, nullable = false)
     private UUID userUUID;
+    @Setter
     @Column(name="userfirstname", nullable = false)
     private String userFirstName;
+    @Setter
     @Column(name = "userlastname", nullable = false)
     private String userLastName;
+    @Setter
     @Column(name = "useremail", nullable = false)
     private String userEmail;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -31,52 +39,13 @@ public class User {
     }
 
     public void addQRCode(UserQRCode userQRCode){
-        if (this.userQRCodes.size() >= 5) {
-            throw new IllegalStateException("User can not have more than 5 qrcodes.");
-        }
-        // ?
+//        if (this.userQRCodes.size() >= 5) {
+//            throw new IllegalStateException("User can not have more than 5 qrcodes.");
+//        }
         this.userQRCodes.add(userQRCode);
         userQRCode.setUser(this);
     }
 
-
-    public User() {
-    }
-
-    public UUID getUserUUID() {
-        return this.userUUID;
-    }
-
-    public String getUserFirstName() {
-        return userFirstName;
-    }
-
-    public void setUserFirstName(String userFirstName) {
-        this.userFirstName = userFirstName;
-    }
-
-    public String getUserLastName() {
-        return userLastName;
-    }
-
-    public void setUserLastName(String userLastName) {
-        this.userLastName = userLastName;
-    }
-
-    public List<UserQRCode> getUserQRCodes() {
-        return userQRCodes;
-    }
-    public void setUserQRCodes(List<UserQRCode> qrCodes) {
-        this.userQRCodes = qrCodes;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
 
     @Override
     public String toString() {
