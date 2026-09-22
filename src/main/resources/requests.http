@@ -14,9 +14,9 @@ POST http://localhost:8080/api/v1/users
 Content-Type: application/json
 
 {
-  "userFirstName": "A",
-  "userLastName": "",
-  "userEmail": "com"
+  "userFirstName": "Jay",
+  "userLastName": "Li",
+  "userEmail": "jayli@cn.com"
 }
 
 ### EDIT EXISTING USER

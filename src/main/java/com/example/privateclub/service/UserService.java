@@ -45,7 +45,7 @@ public class UserService {
         return UserMapper.toDTO(user);
     }
 
-
+    // TODO: custom exception handler
     @Transactional
     public UserDTO createNewUser(UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
         User user = UserMapper.toEntityFromCreate(userCreateAndUpdateDTO);

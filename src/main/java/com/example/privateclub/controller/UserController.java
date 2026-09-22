@@ -4,6 +4,7 @@ import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +48,14 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
         UserDTO createUserResponseDTO = userService.createNewUser(userCreateAndUpdateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponseDTO);
     }
 
 
     @PutMapping("/{uuid}")
-    public ResponseEntity<UserDTO> editUser(@PathVariable UUID uuid, @RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
+    public ResponseEntity<UserDTO> editUser(@Valid @PathVariable UUID uuid, @RequestBody UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
         UserDTO updatedUser = userService.updateExistingUser(uuid, userCreateAndUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
