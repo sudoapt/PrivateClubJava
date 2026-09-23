@@ -1,6 +1,5 @@
 package com.example.privateclub.model;
 
-import com.example.privateclub.repository.UserQRCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,14 +28,14 @@ public class User {
     @Setter
     @Column(name = "useremail", nullable = false)
     private String userEmail;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<UserQRCode> userQRCodes = new ArrayList<>();
 
-    public User(String userFirstName, String userLastName, String userEmail) {
-        this.userFirstName = userFirstName;
-        this.userLastName = userLastName;
-        this.userEmail = userEmail;
-    }
+//    public User(String userFirstName, String userLastName, String userEmail) {
+//        this.userFirstName = userFirstName;
+//        this.userLastName = userLastName;
+//        this.userEmail = userEmail;
+//    }
 
     public void addQRCode(UserQRCode userQRCode){
 //        if (this.userQRCodes.size() >= 5) {

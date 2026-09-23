@@ -5,11 +5,8 @@ import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.model.User;
-import com.example.privateclub.repository.UserQRCode;
-import com.example.privateclub.repository.UserQRCodeRepository;
+import com.example.privateclub.model.UserQRCode;
 import com.example.privateclub.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +23,6 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-//    @Transactional(readOnly = true)
-//    public List<UserDTO> getUsers() {
-//        List<User> users = userRepository.findAllUsersWithQrCodes();
-//
-//        return users.stream()
-//                .map(UserMapper::toDTO)
-//                .toList();
-//    }
 
     public UserDTO getUserByUUID(UUID uuid) {
         User user = userRepository.findByUserUUID(uuid);
@@ -57,7 +45,6 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
 //        userRepository.flush();
-//        entityManager.refresh(savedUser);
 
         return UserMapper.toDTO(savedUser);
     }

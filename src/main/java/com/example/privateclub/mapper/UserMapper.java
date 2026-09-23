@@ -4,7 +4,7 @@ import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.model.User;
-import com.example.privateclub.repository.UserQRCode;
+import com.example.privateclub.model.UserQRCode;
 
 import java.util.List;
 import java.util.UUID;

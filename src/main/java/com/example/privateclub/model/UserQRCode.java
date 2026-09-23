@@ -1,6 +1,5 @@
-package com.example.privateclub.repository;
+package com.example.privateclub.model;
 
-import com.example.privateclub.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
