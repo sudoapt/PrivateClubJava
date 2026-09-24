@@ -1,0 +1,43 @@
+### GET ALL USERS
+GET http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+### GET USER BY UUID
+GET http://localhost:8080/api/v1/users/e607cd87-7182-43ed-8c61-b2203f1c358a
+Content-Type: application/json
+
+### GET USER BY QRCODE
+GET http://localhost:8080/api/v1/users/qrcode/dd0a9fc9-9ecd-4a90-93c0-4916ab54540c
+
+### MAKE NEW USER
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "userFirstName": "Mike",
+  "userLastName": "Glover",
+  "userEmail": "mglover@fco.com"
+}
+
+### EDIT EXISTING USER
+PUT http://localhost:8080/api/v1/users/{{uuid}}
+Content-Type: application/json
+
+{
+  "userFirstName": "Scott",
+  "userLastName": "Riddler",
+  "userEmail": "sriddler@rdl.com"
+}
+
+### DELETE USER BY UUID
+DELETE http://localhost:8080/api/v1/users/163be651-cc5c-4451-8af8-ff7657b99cd2
+Content-Type: application/json
+
+### DELETE USER'S QRCODE
+DELETE http://localhost:8080/api/v1/users/e607cd87-7182-43ed-8c61-b2203f1c358a/qrcodes/b5a7367a-f383-420a-8b02-a362d414c783
+
+### ADD USER'S QRCODE
+POST http://localhost:8080/api/v1/users/e607cd87-7182-43ed-8c61-b2203f1c358a/qrcodes
+
+### EDIT USER'S QRCODE
+PUT http://localhost:8080/api/v1/users/e607cd87-7182-43ed-8c61-b2203f1c358a/qrcodes/fd046c7a-256b-4361-9d4b-4afc6c26cca8
