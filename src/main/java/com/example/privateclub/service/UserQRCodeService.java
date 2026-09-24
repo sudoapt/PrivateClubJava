@@ -3,7 +3,6 @@ package com.example.privateclub.service;
 import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.EntityNotFoundException;
-import com.example.privateclub.exceptions.MaxLimitExceededException;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.model.User;
@@ -30,15 +29,6 @@ public class UserQRCodeService {
         User user = userRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
                 .orElseThrow(() -> new EntityNotFoundException("Invalid or expired QR code: " + userQRCodeUUID));
 
-        // remove the qrcode from the List<UserQRCode> userQRCodes
-//        user.getUserQRCodes().removeIf(qrcode -> qrcode.getUserQRCode().equals(userQRCodeUUID));
-//
-//        // delete the qrcode from the db
-//        userQRCodeRepository.deleteByUserQRCode(userQRCodeUUID);
-//
-//        userRepository.save(user);
-//        userRepository.flush();
-//        entityManager.refresh(user);
         this.deleteUserQRCode(user.getUserUUID(), userQRCodeUUID);
 
         UserQRCode newQRCode = new UserQRCode();
@@ -49,7 +39,6 @@ public class UserQRCodeService {
         user.getUserQRCodes().add(newQRCode);
 
         // inserts a new qrcode to the table
-//        userQRCodeRepository.save(newQRCode);
         userRepository.save(user);
         userRepository.flush();
 
@@ -63,16 +52,11 @@ public class UserQRCodeService {
             throw new NotFoundException("No user found by this uuid + " + uuid);
         }
 
-        if (user.getUserQRCodes().size() >= 5) {
-            throw new MaxLimitExceededException("FORBIDDEN: 5 QR codes per user is the limit.");
-        }
-
         UserQRCode newUserQRCode = new UserQRCode();
         newUserQRCode.setUser(user);
         userQRCodeRepository.save(newUserQRCode);
 
         userRepository.flush();
-//        entityManager.refresh(user);
 
         return UserMapper.toDTO(user);
     }
@@ -99,7 +83,7 @@ public class UserQRCodeService {
         userQRCodeRepository.deleteById(userQRCodeUUID);
 
         userRepository.save(user);
-//        userRepository.flush();
+        userRepository.flush();
 
     }
 

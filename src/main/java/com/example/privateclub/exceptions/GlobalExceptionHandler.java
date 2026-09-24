@@ -27,10 +27,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(MaxLimitExceededException.class)
-    public ResponseEntity<String> handleMaxQRCodesAmount(MaxLimitExceededException ex) {
-        return ResponseEntity.status(HttpStatusCode.valueOf(422)).body(ex.getMessage());
-    }
 
 
 
