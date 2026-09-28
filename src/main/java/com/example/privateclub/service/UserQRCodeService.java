@@ -9,20 +9,17 @@ import com.example.privateclub.model.User;
 import com.example.privateclub.model.QRCode;
 import com.example.privateclub.repository.UserQRCodeRepository;
 import com.example.privateclub.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserQRCodeService {
     private final UserRepository userRepository;
     private final UserQRCodeRepository userQRCodeRepository;
-
-    public UserQRCodeService(UserRepository userRepository, UserQRCodeRepository userQRCodeRepository) {
-        this.userRepository = userRepository;
-        this.userQRCodeRepository = userQRCodeRepository;
-    }
 
     @Transactional
     public UserByQRCodeDTO readAndRotateQRCode(UUID userQRCodeUUID) {
