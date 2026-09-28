@@ -28,12 +28,12 @@
 	</scm>
 	<properties>
 		<java.version>26</java.version>
+		<lombok.version>1.18.48</lombok.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.48</version> <!-- Check for the latest stable version -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

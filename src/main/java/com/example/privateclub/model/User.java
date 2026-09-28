@@ -29,13 +29,13 @@ public class User {
     @Column(name = "useremail", nullable = false)
     private String userEmail;
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<UserQRCode> userQRCodes = new ArrayList<>();
+    private List<QRCode> qrCodes = new ArrayList<>();
 
 
 
-    public void addQRCode(UserQRCode userQRCode){
-        this.userQRCodes.add(userQRCode);
-        userQRCode.setUser(this);
+    public void addQRCode(QRCode qrCode){
+        this.qrCodes.add(qrCode);
+        qrCode.setUser(this);
     }
 
 

@@ -4,15 +4,15 @@ import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserCreateAndUpdateDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.model.User;
-import com.example.privateclub.model.UserQRCode;
+import com.example.privateclub.model.QRCode;
 
 import java.util.List;
 import java.util.UUID;
 
 public class UserMapper {
     public static UserDTO toDTO(User user) {
-        List<UUID> userQRCodes = user.getUserQRCodes().stream()
-                .map(UserQRCode::getUserQRCode)
+        List<UUID> userQRCodes = user.getQrCodes().stream()
+                .map(QRCode::getQRCode)
                 .toList();
 
         return new UserDTO(

@@ -3,6 +3,7 @@ package com.example.privateclub.controller;
 import com.example.privateclub.dto.UserByQRCodeDTO;
 import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.service.UserQRCodeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,14 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "api/v1/users")
 public class UserQRCodeController {
 
     private final UserQRCodeService userQRCodeService;
-
-    public UserQRCodeController(UserQRCodeService userQRCodeService) {
-        this.userQRCodeService = userQRCodeService;
-    }
 
     @GetMapping("/qrcode/{qrcode}")
     public ResponseEntity<UserByQRCodeDTO> getUserByQRCode(@PathVariable UUID qrcode) {

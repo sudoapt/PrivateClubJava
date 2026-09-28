@@ -7,7 +7,7 @@ GET http://localhost:8080/api/v1/users/e607cd87-7182-43ed-8c61-b2203f1c358a
 Content-Type: application/json
 
 ### GET USER BY QRCODE (ENTER BY QR)
-GET http://localhost:8080/api/v1/users/qrcode/f7ad0917-c458-48bc-85d6-7644ba2ba190
+GET http://localhost:8080/api/v1/users/qrcode/a36e99f5-d718-4e82-954b-632d770d57b6
 
 ### MAKE NEW USER
 POST http://localhost:8080/api/v1/users

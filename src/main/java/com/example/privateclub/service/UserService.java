@@ -5,7 +5,7 @@ import com.example.privateclub.dto.UserDTO;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.model.User;
-import com.example.privateclub.model.UserQRCode;
+import com.example.privateclub.model.QRCode;
 import com.example.privateclub.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,14 +38,11 @@ public class UserService {
     public UserDTO createNewUser(UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
         User user = UserMapper.toEntityFromCreate(userCreateAndUpdateDTO);
 
-        UserQRCode userQRCode = new UserQRCode();
-//        user.addQRCode(userQRCode);
-        userQRCode.setUser(user);
-        userQRCode.setUserQRCode(UUID.randomUUID());
+        QRCode qrCode = new QRCode();
+        qrCode.setUser(user);
+        qrCode.setQRCode(UUID.randomUUID());
 
         User savedUser = userRepository.save(user);
-
-//        userRepository.flush();
 
         return UserMapper.toDTO(savedUser);
     }

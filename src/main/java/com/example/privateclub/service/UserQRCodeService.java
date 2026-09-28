@@ -6,7 +6,7 @@ import com.example.privateclub.exceptions.EntityNotFoundException;
 import com.example.privateclub.exceptions.NotFoundException;
 import com.example.privateclub.mapper.UserMapper;
 import com.example.privateclub.model.User;
-import com.example.privateclub.model.UserQRCode;
+import com.example.privateclub.model.QRCode;
 import com.example.privateclub.repository.UserQRCodeRepository;
 import com.example.privateclub.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -29,19 +29,11 @@ public class UserQRCodeService {
         User user = userQRCodeRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
                 .orElseThrow(() -> new EntityNotFoundException("Invalid or expired QR code: " + userQRCodeUUID));
 
-        UserQRCode userQRCode = user.getUserQRCodes().stream()
-                .filter(qrcode -> userQRCodeUUID.equals(qrcode.getUserQRCode()))
+        QRCode qrCode = user.getQrCodes().stream()
+                .filter(qrcode -> userQRCodeUUID.equals(qrcode.getQRCode()))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException(userQRCodeUUID + " not found in this user qrcodes"));
 
-//        this.deleteUserQRCode(user.getUserUUID(), userQRCodeUUID);
-
-//        UserQRCode newQRCode = new UserQRCode();
-        // writes the new qr to the user we're working on
-//        newQRCode.setUser(user);
-
-        // update java memory - add 1 back to list
-//        user.getUserQRCodes().add(newQRCode);
-        userQRCode.setUserQRCode(UUID.randomUUID());
+        qrCode.setQRCode(UUID.randomUUID());
         // inserts a new qrcode to the table
         userRepository.save(user);
         userRepository.flush();
@@ -56,10 +48,9 @@ public class UserQRCodeService {
             throw new NotFoundException("No user found by this uuid + " + uuid);
         }
 
-        UserQRCode newUserQRCode = new UserQRCode();
-        newUserQRCode.setUser(user);
-        newUserQRCode.setUserQRCode(UUID.randomUUID());
-//        userQRCodeRepository.save(newUserQRCode);
+        QRCode newQRCode = new QRCode();
+        newQRCode.setUser(user);
+        newQRCode.setQRCode(UUID.randomUUID());
 
         userRepository.flush();
 
@@ -75,18 +66,14 @@ public class UserQRCodeService {
             throw new NotFoundException("ERROR: No user found by this uuid + " + userUUID);
         }
         // find the qrcode and check if it belongs to this user
-        UserQRCode userQRCode = userQRCodeRepository.findById(userQRCodeUUID)
+        QRCode qrCode = userQRCodeRepository.findById(userQRCodeUUID)
                 .orElseThrow(() -> new NotFoundException("ERROR: No user found has this qrcode + " + userQRCodeUUID));
 
-        if (!user.getUserQRCodes().contains(userQRCode)) {
+        if (!user.getQrCodes().contains(qrCode)) {
             throw new IllegalArgumentException("ERROR: This QR code does not belong to the specified user.");
         }
 
-        // delete from java memory
-//        user.getUserQRCodes().remove(userQRCode);
-        // delete from the db
-//        userQRCodeRepository.deleteById(userQRCodeUUID);
-        userQRCode.setUserQRCode(null);
+        qrCode.setQRCode(null);
 
         userRepository.save(user);
         userRepository.flush();
@@ -98,7 +85,7 @@ public class UserQRCodeService {
         deleteUserQRCode(userUUID, userQRCodeUUID);
 
         User user = userRepository.findByUserUUID(userUUID);
-        UserQRCode newQRCode = new UserQRCode();
+        QRCode newQRCode = new QRCode();
         newQRCode.setUser(user);
         userQRCodeRepository.save(newQRCode);
 

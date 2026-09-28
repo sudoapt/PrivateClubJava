@@ -9,19 +9,19 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_qrcodes")
+@Table(name = "qrcodes")
 @NoArgsConstructor
-public class UserQRCode {
+public class QRCode {
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "qrcodeuuid", updatable = false, nullable = false)
     private UUID qrcodeuuid;
 
     @Setter
     @Getter
-//    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "userqrcode", nullable = true)
-    private UUID userQRCode;
+    @Column(name = "qrcode", nullable = true)
+    private UUID QRCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "useruuid", nullable = false)
@@ -32,8 +32,8 @@ public class UserQRCode {
 
     public void setUser(User user) {
         this.user = user;
-        if (user != null && !user.getUserQRCodes().contains(this)) {
-            user.getUserQRCodes().add(this);
+        if (user != null && !user.getQrCodes().contains(this)) {
+            user.getQrCodes().add(this);
         }
     }
 }
