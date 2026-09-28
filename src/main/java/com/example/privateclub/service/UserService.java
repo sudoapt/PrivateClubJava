@@ -39,8 +39,9 @@ public class UserService {
         User user = UserMapper.toEntityFromCreate(userCreateAndUpdateDTO);
 
         UserQRCode userQRCode = new UserQRCode();
-        user.addQRCode(userQRCode);
-
+//        user.addQRCode(userQRCode);
+        userQRCode.setUser(user);
+        userQRCode.setUserQRCode(UUID.randomUUID());
 
         User savedUser = userRepository.save(user);
 

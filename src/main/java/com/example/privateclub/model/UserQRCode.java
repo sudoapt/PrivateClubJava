@@ -12,11 +12,15 @@ import java.util.UUID;
 @Table(name = "user_qrcodes")
 @NoArgsConstructor
 public class UserQRCode {
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "userqrcode")
+    @Column(name = "qrcodeuuid", updatable = false, nullable = false)
+    private UUID qrcodeuuid;
+
+    @Setter
+    @Getter
+//    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "userqrcode", nullable = true)
     private UUID userQRCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -26,18 +26,22 @@ public class UserQRCodeService {
 
     @Transactional
     public UserByQRCodeDTO readAndRotateQRCode(UUID userQRCodeUUID) {
-        User user = userRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
+        User user = userQRCodeRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
                 .orElseThrow(() -> new EntityNotFoundException("Invalid or expired QR code: " + userQRCodeUUID));
 
-        this.deleteUserQRCode(user.getUserUUID(), userQRCodeUUID);
+        UserQRCode userQRCode = user.getUserQRCodes().stream()
+                .filter(qrcode -> userQRCodeUUID.equals(qrcode.getUserQRCode()))
+                .findFirst().orElseThrow(() -> new EntityNotFoundException(userQRCodeUUID + " not found in this user qrcodes"));
 
-        UserQRCode newQRCode = new UserQRCode();
+//        this.deleteUserQRCode(user.getUserUUID(), userQRCodeUUID);
+
+//        UserQRCode newQRCode = new UserQRCode();
         // writes the new qr to the user we're working on
-        newQRCode.setUser(user);
+//        newQRCode.setUser(user);
 
         // update java memory - add 1 back to list
-        user.getUserQRCodes().add(newQRCode);
-
+//        user.getUserQRCodes().add(newQRCode);
+        userQRCode.setUserQRCode(UUID.randomUUID());
         // inserts a new qrcode to the table
         userRepository.save(user);
         userRepository.flush();
@@ -54,7 +58,8 @@ public class UserQRCodeService {
 
         UserQRCode newUserQRCode = new UserQRCode();
         newUserQRCode.setUser(user);
-        userQRCodeRepository.save(newUserQRCode);
+        newUserQRCode.setUserQRCode(UUID.randomUUID());
+//        userQRCodeRepository.save(newUserQRCode);
 
         userRepository.flush();
 
@@ -78,9 +83,10 @@ public class UserQRCodeService {
         }
 
         // delete from java memory
-        user.getUserQRCodes().remove(userQRCode);
+//        user.getUserQRCodes().remove(userQRCode);
         // delete from the db
-        userQRCodeRepository.deleteById(userQRCodeUUID);
+//        userQRCodeRepository.deleteById(userQRCodeUUID);
+        userQRCode.setUserQRCode(null);
 
         userRepository.save(user);
         userRepository.flush();

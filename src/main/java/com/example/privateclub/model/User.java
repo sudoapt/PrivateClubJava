@@ -31,16 +31,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<UserQRCode> userQRCodes = new ArrayList<>();
 
-//    public User(String userFirstName, String userLastName, String userEmail) {
-//        this.userFirstName = userFirstName;
-//        this.userLastName = userLastName;
-//        this.userEmail = userEmail;
-//    }
+
 
     public void addQRCode(UserQRCode userQRCode){
-//        if (this.userQRCodes.size() >= 5) {
-//            throw new IllegalStateException("User can not have more than 5 qrcodes.");
-//        }
         this.userQRCodes.add(userQRCode);
         userQRCode.setUser(this);
     }
