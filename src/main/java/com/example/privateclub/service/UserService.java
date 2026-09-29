@@ -10,6 +10,7 @@ import com.example.privateclub.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,19 +18,14 @@ public class UserService {
     // bean injection
     private final UserRepository userRepository;
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
-
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     public UserDTO getUserByUUID(UUID uuid) {
-        User user = userRepository.findByUserUUID(uuid);
+        User user = userRepository.findById(uuid).
+                orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + uuid));
 
-        if (user == null) {
-            throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
-        }
         return UserMapper.toDTO(user);
     }
 
@@ -49,11 +45,9 @@ public class UserService {
 
     @Transactional
     public UserDTO updateExistingUser(UUID uuid, UserCreateAndUpdateDTO userCreateAndUpdateDTO) {
-        User user = userRepository.findByUserUUID(uuid);
+        User user = userRepository.findById(uuid)
 
-        if (user == null) {
-            throw new NotFoundException("ERROR: No user found by this uuid + " + uuid);
-        }
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + uuid));
 
         user.setUserFirstName(userCreateAndUpdateDTO.userFirstName());
         user.setUserLastName(userCreateAndUpdateDTO.userLastName());

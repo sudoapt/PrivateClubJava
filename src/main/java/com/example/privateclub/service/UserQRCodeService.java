@@ -40,10 +40,8 @@ public class UserQRCodeService {
 
     @Transactional
     public UserDTO makeNewUserQRCode(UUID uuid) {
-        User user = userRepository.findByUserUUID(uuid);
-        if (user == null) {
-            throw new NotFoundException("No user found by this uuid + " + uuid);
-        }
+        User user = userRepository.findById(uuid)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + uuid));
 
         QRCode newQRCode = new QRCode();
         newQRCode.setUser(user);
@@ -57,11 +55,8 @@ public class UserQRCodeService {
 
     @Transactional
     public void deleteUserQRCode(UUID userUUID, UUID userQRCodeUUID) {
-        User user = userRepository.findByUserUUID(userUUID);
-
-        if (user == null) {
-            throw new NotFoundException("ERROR: No user found by this uuid + " + userUUID);
-        }
+        User user = userRepository.findById(userUUID)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + userUUID));
         // find the qrcode and check if it belongs to this user
         QRCode qrCode = userQRCodeRepository.findById(userQRCodeUUID)
                 .orElseThrow(() -> new NotFoundException("ERROR: No user found has this qrcode + " + userQRCodeUUID));
@@ -81,7 +76,8 @@ public class UserQRCodeService {
     public UserDTO editUserQRCode(UUID userUUID, UUID userQRCodeUUID) {
         deleteUserQRCode(userUUID, userQRCodeUUID);
 
-        User user = userRepository.findByUserUUID(userUUID);
+        User user = userRepository.findById(userUUID)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found has this qrcode + " + userQRCodeUUID));
         QRCode newQRCode = new QRCode();
         newQRCode.setUser(user);
         userQRCodeRepository.save(newQRCode);
