@@ -1,0 +1,92 @@
+package com.example.privateclub.service;
+
+import com.example.privateclub.dto.UserByQRCodeDTO;
+import com.example.privateclub.dto.UserDTO;
+import com.example.privateclub.exceptions.EntityNotFoundException;
+import com.example.privateclub.exceptions.NotFoundException;
+import com.example.privateclub.mapper.UserMapper;
+import com.example.privateclub.model.User;
+import com.example.privateclub.model.QRCode;
+import com.example.privateclub.repository.UserQRCodeRepository;
+import com.example.privateclub.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class UserQRCodeService {
+    private final UserRepository userRepository;
+    private final UserQRCodeRepository userQRCodeRepository;
+
+    @Transactional
+    public UserByQRCodeDTO readAndRotateQRCode(UUID userQRCodeUUID) {
+        User user = userQRCodeRepository.findUserByUserQRCodeUUID(userQRCodeUUID)
+                .orElseThrow(() -> new EntityNotFoundException("Invalid or expired QR code: " + userQRCodeUUID));
+
+        QRCode qrCode = user.getQrCodes().stream()
+                .filter(qrcode -> userQRCodeUUID.equals(qrcode.getQRCode()))
+                .findFirst().orElseThrow(() -> new EntityNotFoundException(userQRCodeUUID + " not found in this user qrcodes"));
+
+        qrCode.setQRCode(UUID.randomUUID());
+        // inserts a new qrcode to the table
+        userRepository.save(user);
+        userRepository.flush();
+
+        return UserMapper.toByQRCodeDTO(user);
+    }
+
+    @Transactional
+    public UserDTO makeNewUserQRCode(UUID uuid) {
+        User user = userRepository.findById(uuid)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + uuid));
+
+        QRCode newQRCode = new QRCode();
+        newQRCode.setUser(user);
+        newQRCode.setQRCode(UUID.randomUUID());
+
+        userRepository.flush();
+
+        return UserMapper.toDTO(user);
+    }
+
+
+    @Transactional
+    public void deleteUserQRCode(UUID userUUID, UUID userQRCodeUUID) {
+        User user = userRepository.findById(userUUID)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found by this uuid + " + userUUID));
+        // find the qrcode and check if it belongs to this user
+        QRCode qrCode = userQRCodeRepository.findById(userQRCodeUUID)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found has this qrcode + " + userQRCodeUUID));
+
+        if (!user.getQrCodes().contains(qrCode)) {
+            throw new IllegalArgumentException("ERROR: This QR code does not belong to the specified user.");
+        }
+
+        qrCode.setQRCode(null);
+
+        userRepository.save(user);
+        userRepository.flush();
+
+    }
+
+    @Transactional
+    public UserDTO editUserQRCode(UUID userUUID, UUID userQRCodeUUID) {
+        deleteUserQRCode(userUUID, userQRCodeUUID);
+
+        User user = userRepository.findById(userUUID)
+                .orElseThrow(() -> new NotFoundException("ERROR: No user found has this qrcode + " + userQRCodeUUID));
+        QRCode newQRCode = new QRCode();
+        newQRCode.setUser(user);
+        userQRCodeRepository.save(newQRCode);
+
+        userRepository.save(user);
+        userRepository.flush();
+
+        return UserMapper.toDTO(user);
+    }
+
+
+}

@@ -1,3 +1,16 @@
 spring:
   application:
     name: privateclub
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lms
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true            # выводить SQL-запросы в консоль
+      properties:
+        hibernate:
+          format_sql: true      # форматировать SQL для читаемости
+          dialect: org.hibernate.dialect.PostgreSQLDialect
